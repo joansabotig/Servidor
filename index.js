@@ -35,9 +35,6 @@ app.use(function(req, res, next) {
    }
 })
 
-
-
-
  var Articulo = sequelize.define("articulo", {
     codigo: {
         type: Sequelize.INTEGER
@@ -60,14 +57,9 @@ app.use(function(req, res, next) {
     porc_iva: {
         type: Sequelize.DECIMAL
     },
-    rubro:{
-        type: Sequelize.Instance
-        
-    }
 })
 
-
-
+Articulo.belongsTo(Rubro)
 
 app.get("/articulo/:id", function(req,res){
     console.log(req.params.id)
@@ -79,9 +71,24 @@ app.get("/articulo/:id", function(req,res){
     })
 })
 
-
-
 app.get("/articulo",function(req,res){
+    console.log("a mandar los articulos")
+    Rubro.findAll().then(rub=>{
+        res.send(rub)
+    })
+})
+
+app.get("/rubro/:id", function(req,res){
+    console.log(req.params.id)
+    console.log("la puta madre")
+    Rubro.findById(req.params.id).then((rub)=>{
+        console.log("hay que mandar un solo articulo")
+        console.log(rub.get({plain:true}))
+        res.send(rub)
+    })
+})
+
+app.get("/rubro",function(req,res){
     console.log("a mandar los articulos")
     Articulo.findAll().then(art=>{
         res.send(art)
@@ -89,61 +96,47 @@ app.get("/articulo",function(req,res){
 })
 
 // Rubro.create({
-//     nombre: "harinas",
-//     descripcion:"polvo blanco"
+//     nombre: "Lacteos",
+//     descripcion:"Pasillo 1"
 // }).then(rub=>{
 //     console.log("rubro creado")
-//     console.log(art.get({plain:true}))
+//     console.log(rub.get({plain:true}))
 // })
 
 // Articulo.create({
-//     codigo:3,
-//     nombre:"pan",
-//     descripcion:"nada",
+//     codigo:3155,
+//     nombre:"Leche",
+//     descripcion:"De Vaca",
 //     precio_compra:20,
 //     precio_venta:30,
 //     stock:5,
 //     porc_iva:21,
-    
 // }).then((art)=>{
 //     Rubro.findById(1).then(rub=>{
 //         art.rubro = rub;
 //         art.setRubro(rub);
 //     })
-    
 // })
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
 var ArticuloAgregado = sequelize.define("articuloagregado",{
     cantidad:{
-        type: Sequelize.STRING       
+        type: Sequelize.INTEGER       
     }
 })
 ArticuloAgregado.belongsTo(Articulo)
+
+// ArticuloAgregado.create({
+//     cantidad:2,
+// }).then(artag=>{
+//     Articulo.findById(1).then(art=>{
+//         artag.setArticulo(art)
+//     })
+// })
+
+
+
 
 var Cliente = sequelize.define("cliente", {
     nombre: {
@@ -190,6 +183,7 @@ var Proveedor = sequelize.define("proveedor", {
     }
 })
 
+/*
 var Factura = Sequelize.define("factura",{
     numero_sucursal: {
         type: sequelize.INTEGER
@@ -239,9 +233,9 @@ var FacturaCompra = Sequelize.define("factura_compra",{
         type: Sequelize.STRING
     }
 })
+
+
 */
-
-
 
 sequelize.sync().then(()=>console.log('todas las tablas creadas'));
 
