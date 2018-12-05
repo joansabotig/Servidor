@@ -679,7 +679,7 @@ app.put("/factura_compra/:id",function(req,res){
         {where:{id:req.params.id}})
         .then(result=>{
             Proveedor.findById(req.body.proveedorId).then( pro =>{
-                result.setProveedor(pro);
+                //result.setProveedor(pro);
             })
         res.send(null);
     })
@@ -700,7 +700,7 @@ app.patch("/factura_compra/:id",function(req,res){
         {where:{id:req.params.id}})
         .then(result=>{
             Proveedor.findById(req.body.proveedorId).then( pro =>{
-                result.setProveedor(pro);
+                //result.setProveedor(pro);
             })
         res.send(null);
     })

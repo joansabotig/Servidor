@@ -21,3 +21,5 @@
 
 ## Further help
 
+Se debe crear la base de datos con nombre "Stock" en postgres
+(o cambiarle el string de conexion)
