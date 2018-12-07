@@ -388,10 +388,6 @@ var ArticuloAgregado = sequelize.define("articulo_agregado",{
     cantidad:{
         type: Sequelize.INTEGER       
     },
-    articuloId:
-    {
-        type: Sequelize.INTEGER
-    },
     facturaId:
     {
         type: Sequelize.INTEGER
@@ -399,7 +395,36 @@ var ArticuloAgregado = sequelize.define("articulo_agregado",{
     facturaCompraId:
     {
         type: Sequelize.INTEGER
+    },
+    nombre:
+    {
+        type: Sequelize.STRING
+    },
+    descripcion:
+    {
+        type: Sequelize.STRING
+    },
+    porc_iva:
+    {
+        type: Sequelize.DECIMAL
+    },
+    precio_compra:
+    {
+        type: Sequelize.DECIMAL
+    },
+    precio_venta:
+    {
+        type: Sequelize.DECIMAL
+    },
+    rubroId:
+    {
+        type:Sequelize.INTEGER
+    },
+    articuloId:
+    {
+        type: Sequelize.INTEGER
     }
+
 })
 
 ArticuloAgregado.belongsTo(Articulo,Factura,FacturaCompra)
@@ -407,13 +432,13 @@ ArticuloAgregado.belongsTo(Articulo,Factura,FacturaCompra)
 // ArticuloAgregado.belongsTo(FacturaCompra)
 
 app.get("/articulo_agregado/:id", function(req,res){
-    ArticuloAgregado.findById(req.params.id,{atributes: ['id','cantidad','articuloId','facturaId','facturaCompraId']}).then((art)=>{
+    ArticuloAgregado.findById(req.params.id).then((art)=>{
         res.send(art)
     })
 })
 
 app.get("/articulo_agregado",function(req,res){
-    ArticuloAgregado.findAll({atributes: ['id','cantidad','articuloId','facturaId','facturaCompraId']}).then(art=>{
+    ArticuloAgregado.findAll().then(art=>{
         res.send(art)
     })
 })
@@ -423,11 +448,15 @@ app.post("/articulo_agregado",function(req,res){
     ArticuloAgregado.create({
         cantidad: req.body.cantidad,
         facturaId: req.body.facturaId,//se puede quitar
-        facturaCompraId: req.body.facturaCompraId//se puede quitar
+        facturaCompraId: req.body.facturaCompraId,//se puede quitar
+        nombre: req.body.nombre,
+        descripcion: req.body.descripcion,
+        porc_iva: req.body.porc_iva,
+        precio_compra: req.body.precio_compra,
+        precio_venta: req.body.precio_venta,
+        rubroId: req.body.rubroId,//se podria sacar con un  belongs To
+        articuloId: req.body.articuloId //se podria sacar con un  belongs To
     }).then( (result)=>{
-        Articulo.findById(req.body.articuloId).then( art =>{
-            result.setArticulo(art);
-        })
         Factura.findById(req.body.facturaId).then( fac =>{
             result.setFactura(fac);
         })
@@ -438,43 +467,43 @@ app.post("/articulo_agregado",function(req,res){
     })
 })
 
-app.put("/articulo_agregado/:id",function(req,res){
-    ArticuloAgregado.update({
-        cantidad: req.body.cantidad
-    },
-        {where:{id:req.params.id}})
-        .then(result=>{
-            Articulo.findById(req.body.articuloId).then( art =>{
-                result.setArticulo(art);
-            })
-            Factura.findById(req.body.facturaId).then( fac =>{
-                result.setFactura(fac);
-            })
-            FacturaCompra.findById(req.body.facturaCompraId).then( faccom =>{
-                result.setFactura(faccom);
-            })
-        res.send(null);
-    })
-})
+// app.put("/articulo_agregado/:id",function(req,res){
+//     ArticuloAgregado.update({
+//         cantidad: req.body.cantidad
+//     },
+//         {where:{id:req.params.id}})
+//         .then(result=>{
+//             Articulo.findById(req.body.articuloId).then( art =>{
+//                 result.setArticulo(art);
+//             })
+//             Factura.findById(req.body.facturaId).then( fac =>{
+//                 result.setFactura(fac);
+//             })
+//             FacturaCompra.findById(req.body.facturaCompraId).then( faccom =>{
+//                 result.setFactura(faccom);
+//             })
+//         res.send(null);
+//     })
+// })
 
-app.patch("/articulo_agregado/:id",function(req,res){
-    ArticuloAgregado.update({
-        cantidad: req.body.cantidad
-    },
-        {where:{id:req.params.id}})
-        .then(result=>{
-            Articulo.findById(req.body.articuloId).then( art =>{
-                result.setArticulo(art);
-            })
-            Factura.findById(req.body.facturaId).then( fac =>{
-                result.setFactura(fac);
-            })
-            FacturaCompra.findById(req.body.facturaCompraId).then( faccom =>{
-                result.setFactura(faccom);
-            })
-        res.send(null);
-    })
-})
+// app.patch("/articulo_agregado/:id",function(req,res){
+//     ArticuloAgregado.update({
+//         cantidad: req.body.cantidad
+//     },
+//         {where:{id:req.params.id}})
+//         .then(result=>{
+//             Articulo.findById(req.body.articuloId).then( art =>{
+//                 result.setArticulo(art);
+//             })
+//             Factura.findById(req.body.facturaId).then( fac =>{
+//                 result.setFactura(fac);
+//             })
+//             FacturaCompra.findById(req.body.facturaCompraId).then( faccom =>{
+//                 result.setFactura(faccom);
+//             })
+//         res.send(null);
+//     })
+// })
 
 app.delete("/articulo_agregado/:id",function(req,res){
     ArticuloAgregado.destroy({where: {id:req.params.id}})
